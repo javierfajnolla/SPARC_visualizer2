@@ -11,7 +11,7 @@ vars <- c(
 )
 
 
-navbarPage("Fajardo et al., (2019) VISUALIZER", id="nav",
+navbarPage("SPARC VISUALIZER", id="nav",
            
            tabPanel("Interactive map",
                     div(class="outer",
@@ -79,8 +79,7 @@ navbarPage("Fajardo et al., (2019) VISUALIZER", id="nav",
                         ),
                         
                         tags$div(id="cite",
-                                 'Priority conservation sites from ', tags$em('TITLE OF PAPER'), ' by AUTHORS.'
-                        )
+                                 'Priority conservation sites from ', tags$em('SPARC'))
                     )
            ),
            
