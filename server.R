@@ -60,7 +60,7 @@ function(input, output, session) {
         solutions_rcl_A <- solutions_A %>% 
           reclassify(tibble(from = c(0, input$thr1_A),
                             to = c(input$thr1_A, 1000),
-                            becomes = c(1, 2)))
+                            becomes = c(NA, 2)))
         
         # Display layer
         map %>% 
@@ -93,7 +93,7 @@ function(input, output, session) {
         solutions_rcl_A <- solutions_A %>% 
           reclassify(tibble(from = c(0, input$thr2_A[1], input$thr2_A[2]),
                             to = c(input$thr2_A[1], input$thr2_A[2], 1000),
-                            becomes = c(1, 2, 3)))
+                            becomes = c(NA, 2, 3)))
         
         # Display layer
         map %>% 
@@ -149,7 +149,7 @@ function(input, output, session) {
         solutions_rcl_B <- solutions_B %>% 
           reclassify(tibble(from = c(0, input$thr1_B),
                             to = c(input$thr1_B, 1000),
-                            becomes = c(1, 2)))
+                            becomes = c(NA, 2)))
         
         # Display layer
         map %>% 
@@ -182,7 +182,7 @@ function(input, output, session) {
         solutions_rcl_B <- solutions_B %>% 
           reclassify(tibble(from = c(0, input$thr2_B[1], input$thr2_B[2]),
                             to = c(input$thr2_B[1], input$thr2_B[2], 1000),
-                            becomes = c(1, 2, 3)))
+                            becomes = c(NA, 2, 3)))
         
         # Display layer
         map %>% 
