@@ -30,44 +30,77 @@ navbarPage("SPARC VISUALIZER", id="nav",
                                       draggable = TRUE, top = 60, left = 60, right = "auto", bottom = "auto",
                                       width = 330, height = "auto",
                                       
-                                      h2("Priority areas explorer"),
+                                      checkboxInput("layA", label = "LAYER 1", value = T),
                                       
-                                      # selectInput("solution", "Layer to show", 
-                                      #             c("Represent sp in present" = "pre",
-                                      #               "Represent sp in present and RCP 4.5" = "pre45",
-                                      #               "Represent sp in present and RCP 8.5" = "pre85")),
-                                      # 
-                                      # hr(),
+                                      column(6, numericInput("thresholds_A", "Number Colors",
+                                                   min = 2, max = 3, value = 2)),
                                       
-                                      numericInput("thresholds", "Number of levels",
-                                                   min = 1, max = 2, value = 1),
+                                      column(6, selectInput("color_A", "Palette",
+                                                            c("Purple to yellow" = "viridis",
+                                                              "Yellow to black" = "magma",
+                                                              "Greens" = "Greens",
+                                                              "Blue to purple" = "BuPu",
+                                                              "Oranges" = "Oranges",
+                                                              "Blues" = "Blues",
+                                                              "Greys" = "Greys",
+                                                              "Reds" = "Reds",
+                                                              "Purples" = "Purples"),
+                                                            selected = "Oranges",
+                                                            width = 800)),
                                       
-                                      conditionalPanel("input.thresholds == 1",
-                                                       sliderInput("thr1", "Priority level:",
+                                      conditionalPanel("input.thresholds_A == 2",
+                                                       sliderInput("thr1_A", "Priority level:",
                                                                    min = 1, max = 999, step = 1, 
                                                                    value = 200)),
-                                      conditionalPanel("input.thresholds == 2",
-                                                       sliderInput("thr2", "Priority level:",
+                                      conditionalPanel("input.thresholds_A == 3",
+                                                       sliderInput("thr2_A", "Priority level:",
                                                                    min = 1, max = 999, step = 1, 
                                                                    value = c(200, 400))),
                                       
-                                      hr(),
+                                      sliderInput("opacity_A", "Transparency:",
+                                                  min = 0, max = 1, step = 0.1, value = 0.5),
                                       
-                                      sliderInput("opacity", "Transparency:",
-                                                  min = 0, max = 1, step = 0.1, value = 1),
-                                      hr(),
-                                      
-                                      selectInput("color", "Choose a color palette",
-                                                  c("Purple to yellow" = "viridis",
-                                                    "Yellow to black" = "magma",
-                                                    "Greens" = "Greens",
-                                                    "Blue to purple" = "BuPu")),
+                                      downloadButton("download_solution_A", label = "Download raster"),
                                       
                                       hr(),
                                       
-                                      h5("Download the raster layer of the solution in the visualization:"),
+                                      checkboxInput("layB", label = "LAYER 2", value = T),
                                       
-                                      downloadButton("download_solution", label = "Download")
+                                      column(6, numericInput("thresholds_B", "Number Colors",
+                                                             min = 2, max = 3, value = 2)),
+                                      
+                                      column(6, selectInput("color_B", "Palette",
+                                                            c("Purple to yellow" = "viridis",
+                                                              "Yellow to black" = "magma",
+                                                              "Greens" = "Greens",
+                                                              "Blue to purple" = "BuPu",
+                                                              "Oranges" = "Oranges",
+                                                              "Blues" = "Blues",
+                                                              "Greys" = "Greys",
+                                                              "Reds" = "Reds",
+                                                              "Purples" = "Purples"),
+                                                            selected = "Purples",
+                                                            width = 800)),
+                                      
+                                      conditionalPanel("input.thresholds_B == 2",
+                                                       sliderInput("thr1_B", "Priority level:",
+                                                                   min = 1, max = 999, step = 1, 
+                                                                   value = 200)),
+                                      conditionalPanel("input.thresholds_B == 3",
+                                                       sliderInput("thr2_B", "Priority level:",
+                                                                   min = 1, max = 999, step = 1, 
+                                                                   value = c(200, 400))),
+                                      
+                                      sliderInput("opacity_B", "Transparency:",
+                                                  min = 0, max = 1, step = 0.1, value = 0.5),
+                                      
+                                      downloadButton("download_solution_B", label = "Download raster"),
+                                      
+                                      hr()
+                                      
+                                      
+                                      
+                                      
                                       # selectInput("size", "Size", vars, selected = "adultpop"),
                                       # conditionalPanel("input.color == 'superzip' || input.size == 'superzip'",
                                       #                  # Only prompt for threshold when coloring or sizing by superzip

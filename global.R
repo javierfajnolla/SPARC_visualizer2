@@ -8,7 +8,8 @@ library(rgdal)
 #   raster("../../_results/prioritization/intermediate_data/pu_0833/problems_allsp/results/pre45_RASTER_bmat_halftg.tif"),
 #   raster("../../_results/prioritization/intermediate_data/pu_0833/problems_allsp/results/pre85_RASTER_bmat_halftg.tif")
 #   )
-solutions <- raster("data/solutions/Aotus griseimembra_pre_dst.tif")
+solutions_A <- raster("data/solutions/Aotus griseimembra_pre_dst.tif")
+solutions_B <- raster("data/solutions/Abrocoma cinerea_pre_dst.tif")
 
 # solutions <- list.files("data/solutions", full.names = T) %>% 
 #   purrr::map(readRDS) %>% 

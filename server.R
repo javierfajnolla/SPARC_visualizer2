@@ -30,9 +30,9 @@ function(input, output, session) {
     leaflet(TAC_border) %>% 
       addTiles() %>%
       addProviderTiles("Esri.WorldPhysical", group = "Relieve") %>%
-      addTiles(options = providerTileOptions(noWrap = TRUE), group = "Countries") %>%
-      addLayersControl(baseGroups = c("Relieve", "Countries"),
-                       options = layersControlOptions(collapsed = FALSE)) %>% 
+      # addTiles(options = providerTileOptions(noWrap = TRUE), group = "Countries") %>%
+      # addLayersControl(baseGroups = c("Relieve", "Countries"),
+      #                  options = layersControlOptions(collapsed = FALSE)) %>% 
       setView(lng = -80, lat = -5, zoom = 4.5) %>% 
       addPolygons(weight = 1,
                   fillOpacity = 0,
@@ -46,88 +46,182 @@ function(input, output, session) {
   
   observe({
     
-    # Select the color palette picked by the user
-    # Color palettes
-    ## For a continuous raster
-    # Get range of values in the solution and center the color scale in the middle
-    if(input$thresholds == 1){
-      pal <- colorFactor(#palette = c("#c0002d", "#f8f5f5", "#0069a8"),
-        palette = input$color,
-        # domain = range_values,
-        levels = c(1, 2),
-        na.color = "transparent",
-        reverse = FALSE)
-      
-      # Reclassify raster to three colors depending on the threshold
-      solutions_rcl <- solutions %>% 
-        reclassify(tibble(from = c(0, input$thr1),
-                          to = c(input$thr1, 1000),
-                          becomes = c(1, 2)))
-      
-      # Display layer
-      map %>% 
-        clearControls() %>%    # Refreshes the legend
-        clearGroup("solutions") %>%
-        fitBounds(lng1 = extent(solutions_rcl)[1],    # zoom to raster extent
-                  lat1 = extent(solutions_rcl)[3],
-                  lng2 = extent(solutions_rcl)[2],
-                  lat2 = extent(solutions_rcl)[4]) %>%
-        addRasterImage(solutions_rcl,
-                       colors = pal,
-                       opacity = input$opacity,
-                       group = "solutions") %>%
-        addLegend(pal = pal,
-                  values = c(0, input$thr1, 1000),
-                  group = "solutions",
-                  labFormat = labelFormat(transform = function(x) sort(x, decreasing = TRUE)))
-    }
-    
-    if(input$thresholds == 2){
-      pal <- colorFactor(#palette = c("#c0002d", "#f8f5f5", "#0069a8"),
-        palette = input$color,
-        # domain = range_values,
-        levels = c(1, 2, 3),
-        na.color = "transparent",
-        reverse = FALSE)
-      
-      # Reclassify raster to three colors depending on the threshold
-      solutions_rcl <- solutions %>% 
-        reclassify(tibble(from = c(0, input$thr2[1], input$thr2[2]),
-                          to = c(input$thr2[1], input$thr2[2], 1000),
-                          becomes = c(1, 2, 3)))
-      
-      # Display layer
-      map %>% 
-        clearControls() %>%    # Refreshes the legend
-        clearGroup("solutions") %>%
-        fitBounds(lng1 = extent(solutions_rcl)[1],    # zoom to raster extent
-                  lat1 = extent(solutions_rcl)[3],
-                  lng2 = extent(solutions_rcl)[2],
-                  lat2 = extent(solutions_rcl)[4]) %>%
-        addRasterImage(solutions_rcl,
-                       colors = pal,
-                       opacity = input$opacity,
-                       group = "solutions") %>%
-      addLegend(pal = pal,
-                values = c(0, input$thr2[1], input$thr2[2], 1000),
-                group = "solutions",
-                labFormat = labelFormat(transform = function(x) sort(x, decreasing = TRUE)))
-      
-    }
-    
-    
-    # Prepare layer to download
-    output$download_solution <- downloadHandler(
-      filename = "Fajardo2019_Priority_areas_present.tif",
-      content = function(file) {
-        res <- writeRaster(solutions[[1]], filename = file, format = "GTiff", overwrite = T)
-        # Show the corresponding output filename
-        print(res@file@name)
+    ## RASTER A
+    if(input$layA == T){
+      if(input$thresholds_A == 2){
+        pal_A <- colorFactor(#palette = c("#c0002d", "#f8f5f5", "#0069a8"),
+          palette = input$color_A,
+          # domain = range_values,
+          levels = c(1, 2),
+          na.color = "transparent",
+          reverse = FALSE)
         
-        # Rename it to the correct filename
-        file.rename(res@file@name, file)
+        # Reclassify raster to three colors depending on the threshold
+        solutions_rcl_A <- solutions_A %>% 
+          reclassify(tibble(from = c(0, input$thr1_A),
+                            to = c(input$thr1_A, 1000),
+                            becomes = c(1, 2)))
+        
+        # Display layer
+        map %>% 
+          clearControls() %>%    # Refreshes the legend
+          clearGroup("solutions_A") %>%
+          fitBounds(lng1 = extent(solutions_rcl_A)[1],    # zoom to raster extent
+                    lat1 = extent(solutions_rcl_A)[3],
+                    lng2 = extent(solutions_rcl_A)[2],
+                    lat2 = extent(solutions_rcl_A)[4]) %>%
+          addRasterImage(solutions_rcl_A,
+                         colors = pal_A,
+                         opacity = input$opacity_A,
+                         group = "solutions_A") %>%
+          addLegend(pal = pal_A,
+                    values = c(1, 2),#c(input$thr1_A, 1000),
+                    group = "solutions_A",
+                    labFormat = labelFormat(transform = function(x) sort(x, decreasing = TRUE)),
+                    position = "topright")
       }
-    )
+      
+      if(input$thresholds_A == 3){
+        pal_A <- colorFactor(#palette = c("#c0002d", "#f8f5f5", "#0069a8"),
+          palette = input$color_A,
+          # domain = range_values,
+          levels = c(1, 2, 3),
+          na.color = "transparent",
+          reverse = FALSE)
+        
+        # Reclassify raster to three colors depending on the threshold
+        solutions_rcl_A <- solutions_A %>% 
+          reclassify(tibble(from = c(0, input$thr2_A[1], input$thr2_A[2]),
+                            to = c(input$thr2_A[1], input$thr2_A[2], 1000),
+                            becomes = c(1, 2, 3)))
+        
+        # Display layer
+        map %>% 
+          clearControls() %>%    # Refreshes the legend
+          clearGroup("solutions_A") %>%
+          fitBounds(lng1 = extent(solutions_rcl_A)[1],    # zoom to raster extent
+                    lat1 = extent(solutions_rcl_A)[3],
+                    lng2 = extent(solutions_rcl_A)[2],
+                    lat2 = extent(solutions_rcl_A)[4]) %>%
+          addRasterImage(solutions_rcl_A,
+                         colors = pal_A,
+                         opacity = input$opacity_A,
+                         group = "solutions_A") %>%
+          addLegend(pal = pal_A,
+                    values = c(1, 2, 3),#c(input$thr2_A[1], input$thr2_A[2], 1000),
+                    group = "solutions_A",
+                    labFormat = labelFormat(transform = function(x) sort(x, decreasing = TRUE)),
+                    position = "topright")
+        
+      }
+      
+      
+      # Prepare layer to download
+      output$download_solution_A <- downloadHandler(
+        filename = "Priority_areas_A.tif",
+        content = function(file) {
+          res <- writeRaster(solutions_A, filename = file, format = "GTiff", overwrite = T)
+          # Show the corresponding output filename
+          print(res@file@name)
+          
+          # Rename it to the correct filename
+          file.rename(res@file@name, file)
+        }
+      )
+    } else {
+      map %>% 
+        clearControls() %>%    # Refreshes the legend
+        clearGroup("solutions_A")
+    }
+    
+    
+    ## RASTER B
+    if(input$layB == T){
+      if(input$thresholds_B == 2){
+        pal_B <- colorFactor(#palette = c("#c0002d", "#f8f5f5", "#0069a8"),
+          palette = input$color_B,
+          # domain = range_values,
+          levels = c(1, 2),
+          na.color = "transparent",
+          reverse = FALSE)
+        
+        # Reclassify raster to three colors depending on the threshold
+        solutions_rcl_B <- solutions_B %>% 
+          reclassify(tibble(from = c(0, input$thr1_B),
+                            to = c(input$thr1_B, 1000),
+                            becomes = c(1, 2)))
+        
+        # Display layer
+        map %>% 
+          clearControls() %>%    # Refreshes the legend
+          clearGroup("solutions_B") %>%
+          fitBounds(lng1 = extent(solutions_rcl_B)[1],    # zoom to raster extent
+                    lat1 = extent(solutions_rcl_B)[3],
+                    lng2 = extent(solutions_rcl_B)[2],
+                    lat2 = extent(solutions_rcl_B)[4]) %>%
+          addRasterImage(solutions_rcl_B,
+                         colors = pal_B,
+                         opacity = input$opacity_B,
+                         group = "solutions_B") %>%
+          addLegend(pal = pal_B,
+                    values = c(1, 2),#c(input$thr1_B, 1000),
+                    group = "solutions_B",
+                    labFormat = labelFormat(transform = function(x) sort(x, decreasing = TRUE)),
+                    position = "bottomright")
+      }
+      
+      if(input$thresholds_B == 3){
+        pal_B <- colorFactor(#palette = c("#c0002d", "#f8f5f5", "#0069a8"),
+          palette = input$color_B,
+          # domain = range_values,
+          levels = c(1, 2, 3),
+          na.color = "transparent",
+          reverse = FALSE)
+        
+        # Reclassify raster to three colors depending on the threshold
+        solutions_rcl_B <- solutions_B %>% 
+          reclassify(tibble(from = c(0, input$thr2_B[1], input$thr2_B[2]),
+                            to = c(input$thr2_B[1], input$thr2_B[2], 1000),
+                            becomes = c(1, 2, 3)))
+        
+        # Display layer
+        map %>% 
+          clearControls() %>%    # Refreshes the legend
+          clearGroup("solutions_B") %>%
+          fitBounds(lng1 = extent(solutions_rcl_B)[1],    # zoom to raster extent
+                    lat1 = extent(solutions_rcl_B)[3],
+                    lng2 = extent(solutions_rcl_B)[2],
+                    lat2 = extent(solutions_rcl_B)[4]) %>%
+          addRasterImage(solutions_rcl_B,
+                         colors = pal_B,
+                         opacity = input$opacity_B,
+                         group = "solutions_B") %>%
+          addLegend(pal = pal_B,
+                    values = c(1, 2, 3),#c(input$thr2_B[1], input$thr2_B[2], 1000),
+                    group = "solutions_B",
+                    labFormat = labelFormat(transform = function(x) sort(x, decreasing = TRUE)),
+                    position = "bottomright")
+        
+      }
+      
+      
+      # Prepare layer to download
+      output$download_solution_B <- downloadHandler(
+        filename = "Priority_areas_B.tif",
+        content = function(file) {
+          res <- writeRaster(solutions_A, filename = file, format = "GTiff", overwrite = T)
+          # Show the corresponding output filename
+          print(res@file@name)
+          
+          # Rename it to the correct filename
+          file.rename(res@file@name, file)
+        }
+      )
+    } else {
+      map %>% 
+        clearControls() %>%    # Refreshes the legend
+        clearGroup("solutions_B")
+    }
     
   })
   
