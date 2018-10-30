@@ -5,19 +5,25 @@ library(rgdal)
 # Load data to display
 
 # Zonation solution
-solution <- raster("data/solutions/NG_Birds_CAZ_hfp_pa.tif") %>% 
-  aggregate(fact = 10, fun = mean)
-proj4string(solution) <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+# solution <- raster("data/solutions/NG_Birds_CAZ_hfp_pa.CAZ_MDE.wrscr.compressed.tif") %>% 
+#   aggregate(fact = 10, fun = mean)
+# proj4string(solution) <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+# 
+# writeRaster(solution, "data/solutions/NG_Birds_CAZ_hfp_pa.CAZ_MDE.wrscr.compressed_agg10.tif")  
+solution <- raster("data/solutions/NG_Birds_CAZ_hfp_pa.CAZ_MDE.wrscr.compressed_agg10.tif")
 
 mask <- solution / solution
 
 # Carbon storage
-carbon_stor <- raster("data/solutions/total_carbon.tif") %>% 
-  aggregate(fact = 10, fun = sum) %>% 
-  crop(mask) %>% 
-  `*` (mask)   # There is data in pixels that are not in the zonation solution
-  
-proj4string(carbon_stor) <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+# carbon_stor <- raster("data/solutions/total_carbon.tif") %>%
+#   aggregate(fact = 10, fun = sum) %>%
+#   crop(mask) %>%
+#   `*` (mask)   # There is data in pixels that are not in the zonation solution
+# proj4string(carbon_stor) <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+# 
+# writeRaster(carbon_stor, "data/solutions/total_carbon_agg10.tif")
+carbon_stor <- raster("data/solutions/total_carbon_agg10.tif")
+
 ## Max
 max_carbon <- carbon_stor %>% values %>% sum(na.rm = T)
 
