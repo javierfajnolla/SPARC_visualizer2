@@ -1,5 +1,6 @@
 library(leaflet)
 library(tidyverse)
+library(plotly)
 
 # Choices for drop-downs
 vars <- c(
@@ -48,53 +49,75 @@ navbarPage("SPARC VISUALIZER", id="nav",
                                                             selected = "Oranges",
                                                             width = 800)),
                                       
-                                      conditionalPanel("input.thresholds_A == 2",
-                                                       sliderInput("thr1_A", "Priority level:",
-                                                                   min = 1, max = 999, step = 1, 
-                                                                   value = 200)),
-                                      conditionalPanel("input.thresholds_A == 3",
-                                                       sliderInput("thr2_A", "Priority level:",
-                                                                   min = 1, max = 999, step = 1, 
-                                                                   value = c(200, 400))),
-                                      
-                                      sliderInput("opacity_A", "Transparency:",
-                                                  min = 0, max = 1, step = 0.1, value = 0.5),
-                                      
-                                      downloadButton("download_solution_A", label = "Download raster"),
+                                      sliderInput("thr1", "Solution threshold:",
+                                                  min = 1, max = 100, step = 1,
+                                                  value = 17),
                                       
                                       hr(),
                                       
-                                      checkboxInput("layB", label = "LAYER 2", value = T),
+                                      sliderInput("thr2", "Carbon offset",
+                                                  min = 0, max = 100, step = 1,
+                                                  value = tbl %>% 
+                                                    filter(abs(perc_pixels - 0.17) == min(abs(perc_pixels - 0.17))) %>% 
+                                                    pull(prop_carbon_strg) %>% 
+                                                    `*` (100) %>% 
+                                                    round(0)),
                                       
-                                      column(6, numericInput("thresholds_B", "Number Colors",
-                                                             min = 2, max = 3, value = 2)),
+                                      plotlyOutput("plotly"),
                                       
-                                      column(6, selectInput("color_B", "Palette",
-                                                            c("Purple to yellow" = "viridis",
-                                                              "Yellow to black" = "magma",
-                                                              "Greens" = "Greens",
-                                                              "Blue to purple" = "BuPu",
-                                                              "Oranges" = "Oranges",
-                                                              "Blues" = "Blues",
-                                                              "Greys" = "Greys",
-                                                              "Reds" = "Reds",
-                                                              "Purples" = "Purples"),
-                                                            selected = "Purples",
-                                                            width = 800)),
+                                      # uiOutput("thresholdUI"),
+                                      # 
+                                      # hr(),
+                                      # 
+                                      # uiOutput("carbonUI"),
+                                      # 
+                                      # conditionalPanel("input.thresholds_A == 2",
+                                      #                  sliderInput("thr1_A", "Priority level:",
+                                      #                              min = 1, max = 999, step = 1, 
+                                      #                              value = 200)),
+                                      # conditionalPanel("input.thresholds_A == 3",
+                                      #                  sliderInput("thr2_A", "Priority level:",
+                                      #                              min = 1, max = 999, step = 1, 
+                                      #                              value = c(200, 400))),
                                       
-                                      conditionalPanel("input.thresholds_B == 2",
-                                                       sliderInput("thr1_B", "Priority level:",
-                                                                   min = 1, max = 999, step = 1, 
-                                                                   value = 200)),
-                                      conditionalPanel("input.thresholds_B == 3",
-                                                       sliderInput("thr2_B", "Priority level:",
-                                                                   min = 1, max = 999, step = 1, 
-                                                                   value = c(200, 400))),
+                                      # sliderInput("opacity_A", "Transparency:",
+                                      #             min = 0, max = 1, step = 0.1, value = 0.5),
                                       
-                                      sliderInput("opacity_B", "Transparency:",
-                                                  min = 0, max = 1, step = 0.1, value = 0.5),
+                                      # downloadButton("download_solution_A", label = "Download raster"),
                                       
-                                      downloadButton("download_solution_B", label = "Download raster"),
+                                      # hr(),
+                                      
+                                      # checkboxInput("layB", label = "LAYER 2", value = T),
+                                      # 
+                                      # column(6, numericInput("thresholds_B", "Number Colors",
+                                      #                        min = 2, max = 3, value = 2)),
+                                      # 
+                                      # column(6, selectInput("color_B", "Palette",
+                                      #                       c("Purple to yellow" = "viridis",
+                                      #                         "Yellow to black" = "magma",
+                                      #                         "Greens" = "Greens",
+                                      #                         "Blue to purple" = "BuPu",
+                                      #                         "Oranges" = "Oranges",
+                                      #                         "Blues" = "Blues",
+                                      #                         "Greys" = "Greys",
+                                      #                         "Reds" = "Reds",
+                                      #                         "Purples" = "Purples"),
+                                      #                       selected = "Purples",
+                                      #                       width = 800)),
+                                      # 
+                                      # conditionalPanel("input.thresholds_B == 2",
+                                      #                  sliderInput("thr1_B", "Priority level:",
+                                      #                              min = 1, max = 999, step = 1, 
+                                      #                              value = 200)),
+                                      # conditionalPanel("input.thresholds_B == 3",
+                                      #                  sliderInput("thr2_B", "Priority level:",
+                                      #                              min = 1, max = 999, step = 1, 
+                                      #                              value = c(200, 400))),
+                                      # 
+                                      # sliderInput("opacity_B", "Transparency:",
+                                      #             min = 0, max = 1, step = 0.1, value = 0.5),
+                                      # 
+                                      # downloadButton("download_solution_B", label = "Download raster"),
                                       
                                       hr()
                                       

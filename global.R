@@ -3,47 +3,58 @@ library(raster)
 library(rgdal)
 
 # Load data to display
-# solutions <- stack(
-#   raster("../../_results/prioritization/intermediate_data/pu_0833/problems_allsp/results/pre_RASTER_bmat_halftg.tif"),
-#   raster("../../_results/prioritization/intermediate_data/pu_0833/problems_allsp/results/pre45_RASTER_bmat_halftg.tif"),
-#   raster("../../_results/prioritization/intermediate_data/pu_0833/problems_allsp/results/pre85_RASTER_bmat_halftg.tif")
-#   )
-solutions_A <- raster("data/solutions/Aotus griseimembra_pre_dst.tif")
-solutions_B <- raster("data/solutions/Abrocoma cinerea_pre_dst.tif")
 
-# solutions <- list.files("data/solutions", full.names = T) %>% 
-#   purrr::map(readRDS) %>% 
-#   stack %>% 
-#   setNames(c("pre", "pre45", "pre85"))
-# Set NA value to not selected sites, so these sites are shown as transparent
-# solutions <- solutions %>% as.list %>% 
-#   purrr::map(~.x %>% reclassify(tibble(is = 0, becomes = NA))) %>% 
-#   purrr::map(~.x %>% trim)
+# Zonation solution
+solution <- raster("data/solutions/NG_Birds_CAZ_hfp_pa.tif") %>% 
+  aggregate(fact = 10, fun = mean)
+proj4string(solution) <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
 
-# Load other data to display
-## Study area borders
-TAC_border <- readOGR("data/SIG", "PAT_simplified")
+mask <- solution / solution
 
-# library(dplyr)
+# Carbon storage
+carbon_stor <- raster("data/solutions/total_carbon.tif") %>% 
+  aggregate(fact = 10, fun = sum) %>% 
+  crop(mask) %>% 
+  `*` (mask)   # There is data in pixels that are not in the zonation solution
+  
+proj4string(carbon_stor) <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+## Max
+max_carbon <- carbon_stor %>% values %>% sum(na.rm = T)
+
+################## Table of carbon offset for each percentage
+# tbl <- tibble(perc_pixels = seq(0.01, 1, by = 0.01))
+# tbl$cutoff_sol <- NA
 # 
-# allzips <- readRDS("data/superzip.rds")
-# allzips$latitude <- jitter(allzips$latitude)
-# allzips$longitude <- jitter(allzips$longitude)
-# allzips$college <- allzips$college * 100
-# allzips$zipcode <- formatC(allzips$zipcode, width=5, format="d", flag="0")
-# row.names(allzips) <- allzips$zipcode
+# # Sorted priority values (to select x% with higher priority)
+# sol_values_sort <- solution %>% values %>% sort %>% rev
 # 
-# cleantable <- allzips %>%
-#   select(
-#     City = city.x,
-#     State = state.x,
-#     Zipcode = zipcode,
-#     Rank = rank,
-#     Score = centile,
-#     Superzip = superzip,
-#     Population = adultpop,
-#     College = college,
-#     Income = income,
-#     Lat = latitude,
-#     Long = longitude
-#   )
+# # Cutoff in solution to retain each percentage of the study area
+# for (j in 1:nrow(tbl)){
+#   tbl$cutoff_sol[j] <- sol_values_sort[(length(sol_values_sort) * tbl$perc_pixels[j]) %>% round(0)]
+# }
+# 
+# # Carbon storage saved by protecting each percentage of the study area
+# tbl$carbon_strg <- NA
+# for(i in tbl$perc_pixels){#[is.na(tbl$carbon_strg)]){
+#   sel_thr <- tbl %>%
+#     filter(perc_pixels == i) %>%
+#     pull(cutoff_sol)
+# 
+#   sol_rcl <- solution %>%
+#     reclassify(tibble(from = c(0, sel_thr),
+#                       to = c(sel_thr, max(values(solution), na.rm = T)),
+#                       becomes = c(NA, 1)))
+# 
+#   tbl$carbon_strg[tbl$perc_pixels == i] <- (sol_rcl * carbon_stor) %>% values %>% sum(na.rm = T)
+# }
+# 
+# tbl <- tbl %>%
+#   mutate(prop_carbon_strg = carbon_strg / max_carbon)
+# 
+# saveRDS(tbl, "data/tables/tbl.rds")
+  
+### Load precalculated table to speed up
+tbl <- readRDS("data/tables/tbl.rds")
+
+##################
+
