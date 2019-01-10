@@ -5,12 +5,20 @@ library(rgdal)
 # Load data to display
 
 # Zonation solution
-# solution <- raster("data/solutions/NG_Birds_CAZ_hfp_pa.CAZ_MDE.wrscr.compressed.tif") %>% 
+# solution <- raster("data/solutions/NG_Birds_CAZ_hfp_pa.CAZ_MDE.wrscr.compressed.tif") %>%
 #   aggregate(fact = 10, fun = mean)
 # proj4string(solution) <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
 # 
-# writeRaster(solution, "data/solutions/NG_Birds_CAZ_hfp_pa.CAZ_MDE.wrscr.compressed_agg10.tif")  
-solution <- raster("data/solutions/NG_Birds_CAZ_hfp_pa.CAZ_MDE.wrscr.compressed_agg10.tif")
+# writeRaster(solution, "data/solutions/NG_Birds_CAZ_hfp_pa.CAZ_MDE.wrscr.compressed_agg10.tif")
+# solution <- raster("data/solutions/NG_Birds_CAZ_hfp_pa.CAZ_MDE.wrscr.compressed_agg10.tif")
+
+## Correct solution
+# solution <- raster("data/solutions/NG_Birds_CAZ_hfp_pa.CAZ_MDE.rank.compressed.tif") %>%
+#   aggregate(fact = 10, fun = mean)
+# proj4string(solution) <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+# 
+# writeRaster(solution, "data/solutions/NG_Birds_CAZ_hfp_pa.CAZ_MDE.rank.compressed_agg10.tif")
+solution <- raster("data/solutions/NG_Birds_CAZ_hfp_pa.CAZ_MDE.rank.compressed_agg10.tif")
 
 mask <- solution / solution
 
@@ -60,7 +68,8 @@ max_carbon <- carbon_stor %>% values %>% sum(na.rm = T)
 # saveRDS(tbl, "data/tables/tbl.rds")
   
 ### Load precalculated table to speed up
-tbl <- readRDS("data/tables/tbl.rds")
+# tbl <- readRDS("data/tables/tbl.rds")
+tbl <- read_csv("data/tables/tbl.csv")
 
 ##################
 

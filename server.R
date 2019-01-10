@@ -89,8 +89,8 @@ function(input, output, session) {
                   filter(perc_pixels <= input$thr1),
                 aes(x = perc_pixels, y = prop_carbon_strg),
                 fill = "#E45621") +
-      xlab("Proportion of carbon storage saved") +
-      ylab("Proportion of study area protected") +
+      xlab("Proportion of study area protected") +
+      ylab("Proportion of carbon storage saved") +
       theme_minimal()
     
     output$plotly <- renderPlotly(
