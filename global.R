@@ -68,6 +68,7 @@ max_carbon <- carbon_stor %>% values %>% sum(na.rm = T)
 #   mutate(prop_carbon_strg = carbon_strg / max_carbon,
 #          prop_carbon_strg_rounded = round(prop_carbon_strg, 2))
 
+### DO NOT RUN THIS PART -from here to saveRDS- , it was just testing... but it doesn't seem to solve the problems, although I might want to go back to this later.
 ## Fill values of the carbon storage slider that did not correspond to any particular threshold of the solution (including values between the max carbon thr and 100)
 # perc_pixels_carbon <- seq(0.01, 1, by = 0.01)
 # tbl_carboff <- setdiff(perc_pixels_carbon, tbl$prop_carbon_strg_rounded) %>%
@@ -79,7 +80,7 @@ max_carbon <- carbon_stor %>% values %>% sum(na.rm = T)
 #     mutate(prop_carbon_strg_rounded = tbl_carboff$prop_carbon_strg_rounded[k])
 #   new_tbl_carboff <- new_tbl_carboff %>% bind_rows(tbl_temp)
 # }
-
+#
 ## Combine both tables
 # tbl <- tbl %>% bind_rows(new_tbl_carboff)
 
