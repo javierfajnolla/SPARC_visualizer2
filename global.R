@@ -22,8 +22,8 @@ library(rgdal)
 # solution <- raster("data_Africa/solutions/AT_Birds_gf8570_BLP1_noPA.CAZ_EBLP100.rank.compressed.tif")
 solution <- raster("data_Africa/solutions/AT_Birds_gf8570_BLP1_noPA.CAZ_EBLP100.rank.compressed_x2.tif")
 # Test with different resolutions
-# solution <- solution %>% 
-#   aggregate(fact = 2, fun = "sum")
+# solution <- solution %>%
+#   aggregate(fact = 2, fun = "max")
 
 mask <- solution / solution
 
@@ -94,11 +94,14 @@ max_carbon <- carbon_stor %>% values %>% sum(na.rm = T)
 
 # saveRDS(tbl, "data_Africa/tables/tbl_Africa.rds")
 # write_csv(tbl, "data_Africa/tables/tbl_Africa.csv")
+# saveRDS(tbl, "data_Africa/tables/tbl_Africa_x2.rds")
+# write_csv(tbl, "data_Africa/tables/tbl_Africa_x2.csv")
   
 ### Load precalculated table to speed up
 # tbl <- readRDS("data/tables/tbl.rds")
 # tbl <- read_csv("data/tables/tbl.csv")
-tbl <- readRDS("data_Africa/tables/tbl_Africa.rds")
+# tbl <- readRDS("data_Africa/tables/tbl_Africa.rds")
+tbl <- readRDS("data_Africa/tables/tbl_Africa_x2.rds")
 
 ##################
 
