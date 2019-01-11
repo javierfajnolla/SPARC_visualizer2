@@ -19,7 +19,11 @@ library(rgdal)
 # 
 # writeRaster(solution, "data/solutions/NG_Birds_CAZ_hfp_pa.CAZ_MDE.rank.compressed_agg10.tif")
 # solution <- raster("data/solutions/NG_Birds_CAZ_hfp_pa.CAZ_MDE.rank.compressed_agg10.tif")
-solution <- raster("data_Africa/solutions/AT_Birds_gf8570_BLP1_noPA.CAZ_EBLP100.rank.compressed.tif")
+# solution <- raster("data_Africa/solutions/AT_Birds_gf8570_BLP1_noPA.CAZ_EBLP100.rank.compressed.tif")
+solution <- raster("data_Africa/solutions/AT_Birds_gf8570_BLP1_noPA.CAZ_EBLP100.rank.compressed_x2.tif")
+# Test with different resolutions
+# solution <- solution %>% 
+#   aggregate(fact = 2, fun = "sum")
 
 mask <- solution / solution
 
@@ -32,7 +36,11 @@ mask <- solution / solution
 # 
 # writeRaster(carbon_stor, "data/solutions/total_carbon_agg10.tif")
 # carbon_stor <- raster("data/solutions/total_carbon_agg10.tif")
-carbon_stor <- raster("data_Africa/solutions/AT_total_carbon_2_5m.tif")
+# carbon_stor <- raster("data_Africa/solutions/AT_total_carbon_2_5m.tif")
+carbon_stor <- raster("data_Africa/solutions/AT_total_carbon_2_5m_x2.tif")
+# Test with different resolutions
+# carbon_stor <- carbon_stor %>% 
+#   aggregate(fact = 2, fun = "sum")
 
 ## Max
 max_carbon <- carbon_stor %>% values %>% sum(na.rm = T)

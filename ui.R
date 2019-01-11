@@ -31,7 +31,7 @@ navbarPage("SPARC VISUALIZER", id="nav",
                                       draggable = TRUE, top = 60, left = 60, right = "auto", bottom = "auto",
                                       width = 330, height = "auto",
                                       
-                                      checkboxInput("layA", label = "LAYER 1", value = T),
+                                      # checkboxInput("layA", label = "LAYER 1", value = T),
                                       
                                       column(6, numericInput("thresholds_A", "Number Colors",
                                                    min = 2, max = 3, value = 2)),
