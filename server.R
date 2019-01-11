@@ -35,15 +35,21 @@ function(input, output, session) {
     rvs$sel_row <- tbl %>% 
       filter(abs(perc_pixels - (input$thr1) / 100) == min(abs(perc_pixels - (input$thr1) / 100)))
     ## Update Carbon offset slider
-    updateSliderInput(session = session, inputId = "thr2", 
-                      value = rvs$sel_row %>% pull(prop_carbon_strg) %>% `*` (100) %>% round(0))
+    new_value <- rvs$sel_row %>% pull(prop_carbon_strg) %>% `*` (100)
+    if(!(input$thr2 %in% new_value)){
+      updateSliderInput(session = session, inputId = "thr2", 
+                        value = rvs$sel_row %>% pull(prop_carbon_strg) %>% `*` (100) %>% round(0))
+    }
   })
   observeEvent(input$thr2, {
     rvs$sel_row <- tbl %>% 
       filter(abs(prop_carbon_strg - (input$thr2) / 100) == min(abs(prop_carbon_strg - (input$thr2) / 100)))
     ## Update threshold slider
-    updateSliderInput(session = session, inputId = "thr1", 
-                      value = rvs$sel_row %>% pull(perc_pixels) %>% `*` (100))
+    new_value <- rvs$sel_row %>% pull(perc_pixels) %>% `*` (100)
+    if(!(input$thr1 %in% new_value)){
+      updateSliderInput(session = session, inputId = "thr1", 
+                        value = rvs$sel_row %>% pull(perc_pixels) %>% `*` (100))
+    }
   })
   
   observeEvent(rvs$sel_row, {

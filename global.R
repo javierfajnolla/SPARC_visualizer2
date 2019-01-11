@@ -18,7 +18,8 @@ library(rgdal)
 # proj4string(solution) <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
 # 
 # writeRaster(solution, "data/solutions/NG_Birds_CAZ_hfp_pa.CAZ_MDE.rank.compressed_agg10.tif")
-solution <- raster("data/solutions/NG_Birds_CAZ_hfp_pa.CAZ_MDE.rank.compressed_agg10.tif")
+# solution <- raster("data/solutions/NG_Birds_CAZ_hfp_pa.CAZ_MDE.rank.compressed_agg10.tif")
+solution <- raster("data_Africa/solutions/AT_Birds_gf8570_BLP1_noPA.CAZ_EBLP100.rank.compressed.tif")
 
 mask <- solution / solution
 
@@ -30,7 +31,8 @@ mask <- solution / solution
 # proj4string(carbon_stor) <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
 # 
 # writeRaster(carbon_stor, "data/solutions/total_carbon_agg10.tif")
-carbon_stor <- raster("data/solutions/total_carbon_agg10.tif")
+# carbon_stor <- raster("data/solutions/total_carbon_agg10.tif")
+carbon_stor <- raster("data_Africa/solutions/AT_total_carbon_2_5m.tif")
 
 ## Max
 max_carbon <- carbon_stor %>% values %>% sum(na.rm = T)
@@ -63,13 +65,31 @@ max_carbon <- carbon_stor %>% values %>% sum(na.rm = T)
 # }
 # 
 # tbl <- tbl %>%
-#   mutate(prop_carbon_strg = carbon_strg / max_carbon)
-# 
-# saveRDS(tbl, "data/tables/tbl.rds")
+#   mutate(prop_carbon_strg = carbon_strg / max_carbon,
+#          prop_carbon_strg_rounded = round(prop_carbon_strg, 2))
+
+## Fill values of the carbon storage slider that did not correspond to any particular threshold of the solution (including values between the max carbon thr and 100)
+# perc_pixels_carbon <- seq(0.01, 1, by = 0.01)
+# tbl_carboff <- setdiff(perc_pixels_carbon, tbl$prop_carbon_strg_rounded) %>%
+#   as_tibble %>% setNames("prop_carbon_strg_rounded")
+# new_tbl_carboff <- tibble()
+# for (k in 1:nrow(tbl_carboff)){
+#   tbl_temp <- tbl %>%
+#     filter(abs(prop_carbon_strg_rounded - tbl_carboff$prop_carbon_strg_rounded[k]) == min(abs(prop_carbon_strg_rounded - tbl_carboff$prop_carbon_strg_rounded[k]))) %>%
+#     mutate(prop_carbon_strg_rounded = tbl_carboff$prop_carbon_strg_rounded[k])
+#   new_tbl_carboff <- new_tbl_carboff %>% bind_rows(tbl_temp)
+# }
+
+## Combine both tables
+# tbl <- tbl %>% bind_rows(new_tbl_carboff)
+
+# saveRDS(tbl, "data_Africa/tables/tbl_Africa.rds")
+# write_csv(tbl, "data_Africa/tables/tbl_Africa.csv")
   
 ### Load precalculated table to speed up
 # tbl <- readRDS("data/tables/tbl.rds")
-tbl <- read_csv("data/tables/tbl.csv")
+# tbl <- read_csv("data/tables/tbl.csv")
+tbl <- readRDS("data_Africa/tables/tbl_Africa.rds")
 
 ##################
 
